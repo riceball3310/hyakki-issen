@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>百鬼一閃</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main id="gameWrap">
+    <canvas id="game"></canvas>
+
+    <section id="ui">
+      <div class="title">百鬼一閃</div>
+      <div id="stats">SCORE 0</div>
+    </section>
+
+    <section id="titleScreen" class="menuScreen">
+      <div class="titleStage">
+        <div class="titleFrame">
+          <img class="titleArt titleArtPc" src="assets/title_bg_pc.png" alt="" />
+          <img class="titleArt titleArtSp" src="assets/title_bg_sp.png" alt="" />
+
+          <button id="startBtn" class="artHotspot startSpot" aria-label="ゲームスタート"></button>
+          <button id="howtoBtn" class="artHotspot howtoSpot" aria-label="遊び方"></button>
+          <button id="settingsBtn" class="artHotspot settingsSpot" aria-label="設定"></button>
+        </div>
+
+        <div class="titleFooterHint">画像内ボタンをクリック / タップして開始</div>
+      </div>
+    </section>
+
+    <section id="howtoScreen" class="menuScreen modalScreen hidden">
+      <div class="modalCard">
+        <div class="modalEyebrow">HOW TO PLAY</div>
+        <h2>遊び方</h2>
+        <div class="infoGrid">
+          <div class="infoBlock">
+            <div class="infoTitle">スマホ操作</div>
+            <div class="infoText">
+              左下スティック：移動<br>
+              右下「一閃」：通常攻撃<br>
+              右下「月蝕」：ゲージ100%で必殺技
+            </div>
+          </div>
+          <div class="infoBlock">
+            <div class="infoTitle">PC操作</div>
+            <div class="infoText">
+              WASD / 矢印キー：移動<br>
+              Space：一閃<br>
+              E：月蝕ノ舞
+            </div>
+          </div>
+        </div>
+        <p class="modalNote">敵を引きつけて、一気に斬るのがコツ。</p>
+        <div class="modalActions">
+          <button id="howtoBackBtn" class="primaryBtn smallBtn">タイトルに戻る</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="settingsScreen" class="menuScreen modalScreen hidden">
+      <div class="modalCard">
+        <div class="modalEyebrow">SETTINGS</div>
+        <h2>設定</h2>
+        <p class="modalLead">敵の湧き方で難易度を変更できます。</p>
+
+        <div class="difficultyGrid">
+          <button class="difficultyBtn active" data-difficulty="easy">
+            <span class="diffName">やさしい</span>
+            <span class="diffDesc">敵の湧きがかなり少なめ</span>
+          </button>
+          <button class="difficultyBtn" data-difficulty="normal">
+            <span class="diffName">ふつう</span>
+            <span class="diffDesc">標準的なバランス</span>
+          </button>
+          <button class="difficultyBtn" data-difficulty="hard">
+            <span class="diffName">むずかしい</span>
+            <span class="diffDesc">敵が多めに湧く</span>
+          </button>
+          <button class="difficultyBtn" data-difficulty="chaos">
+            <span class="diffName">百鬼</span>
+            <span class="diffDesc">かなり激しく押し寄せる</span>
+          </button>
+        </div>
+
+        <div class="modalActions">
+          <button id="settingsBackBtn" class="primaryBtn smallBtn">タイトルに戻る</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="resultScreen" class="menuScreen modalScreen hidden">
+      <div class="modalCard resultCard">
+        <div class="modalEyebrow">RESULT</div>
+        <h2>討伐終了</h2>
+        <div class="resultGrid">
+          <div class="resultItem">
+            <div class="resultLabel">SCORE</div>
+            <div class="resultValue" id="resultScore">0</div>
+          </div>
+          <div class="resultItem">
+            <div class="resultLabel">BEST COMBO</div>
+            <div class="resultValue" id="resultCombo">0</div>
+          </div>
+          <div class="resultItem">
+            <div class="resultLabel">DIFFICULTY</div>
+            <div class="resultValue" id="resultDifficulty">ふつう</div>
+          </div>
+        </div>
+        <div class="modalActions">
+          <button id="retryBtn" class="primaryBtn smallBtn">再挑戦</button>
+          <button id="resultTitleBtn" class="secondaryBtn smallBtn">タイトルに戻る</button>
+        </div>
+      </div>
+    </section>
+
+    <div id="stickBase" aria-hidden="true">
+      <div id="stick"></div>
+    </div>
+
+    <button id="attackBtn">一閃</button>
+    <button id="ultimateBtn">月蝕</button>
+
+    <div id="cutinLayer" aria-hidden="true">
+      <img id="cutinImage" src="assets/yuyu_cutin.png" alt="" />
+      <div id="ultimateName">月蝕ノ舞</div>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

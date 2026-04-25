@@ -1,33 +1,106 @@
 (() => {
-  const BGM_SRC = "assets/bgm_battle.mp3.mp3";
+  const BGM_CANDIDATES = [
+    "assets/bgm_battle.mp3.mp3?v=4",
+    "assets/bgm_battle.mp3?v=4"
+  ];
   const STORAGE_KEY = "hyakki_issen_bgm_enabled";
 
-  const audio = new Audio(BGM_SRC);
+  let audio = new Audio(BGM_CANDIDATES[0]);
   audio.loop = true;
-  audio.volume = 0.38;
+  audio.volume = 0.42;
   audio.preload = "auto";
 
   let bgmEnabled = localStorage.getItem(STORAGE_KEY) !== "off";
+  let unlocked = false;
+  let currentCandidateIndex = 0;
 
   function saveSetting() {
     localStorage.setItem(STORAGE_KEY, bgmEnabled ? "on" : "off");
   }
 
+  function setAudioSource(index) {
+    currentCandidateIndex = index;
+    const src = BGM_CANDIDATES[currentCandidateIndex];
+    if (audio.src.includes(src.replace(/\?.*$/, ""))) return;
+
+    const wasPlaying = !audio.paused;
+    audio.pause();
+    audio = new Audio(src);
+    audio.loop = true;
+    audio.volume = 0.42;
+    audio.preload = "auto";
+    if (wasPlaying && bgmEnabled) playBattleBgm();
+  }
+
+  function tryNextSource() {
+    if (currentCandidateIndex + 1 < BGM_CANDIDATES.length) {
+      setAudioSource(currentCandidateIndex + 1);
+      return true;
+    }
+    return false;
+  }
+
+  function updateAudioButton() {
+    const btn = document.getElementById("audioUnlockBtn");
+    if (!btn) return;
+
+    btn.textContent = bgmEnabled
+      ? (unlocked ? "BGM ON" : "音声ON")
+      : "BGM OFF";
+    btn.classList.toggle("is-on", bgmEnabled && unlocked);
+    btn.classList.toggle("is-off", !bgmEnabled);
+  }
+
   function playBattleBgm() {
     if (!bgmEnabled) return;
-    audio.volume = 0.38;
+    audio.volume = 0.42;
+
     const promise = audio.play();
-    if (promise && typeof promise.catch === "function") {
-      promise.catch(() => {
-        // iPhone / Android のブラウザでは、ユーザー操作の直後以外は再生が止められることがある。
-        // その場合は次のタップ操作で再試行する。
-      });
+    if (promise && typeof promise.then === "function") {
+      promise
+        .then(() => {
+          unlocked = true;
+          updateAudioButton();
+        })
+        .catch(() => {
+          if (tryNextSource()) {
+            const retry = audio.play();
+            if (retry && typeof retry.then === "function") {
+              retry
+                .then(() => {
+                  unlocked = true;
+                  updateAudioButton();
+                })
+                .catch(() => updateAudioButton());
+            }
+          } else {
+            updateAudioButton();
+          }
+        });
     }
   }
 
   function stopBattleBgm() {
     audio.pause();
     audio.currentTime = 0;
+    updateAudioButton();
+  }
+
+  function toggleBgm() {
+    bgmEnabled = !bgmEnabled;
+    saveSetting();
+    if (bgmEnabled) playBattleBgm();
+    else stopBattleBgm();
+    updateToggleButton();
+    updateAudioButton();
+  }
+
+  function unlockAudio() {
+    bgmEnabled = true;
+    saveSetting();
+    playBattleBgm();
+    updateToggleButton();
+    updateAudioButton();
   }
 
   function updateToggleButton() {
@@ -39,6 +112,20 @@
       : `<span class="diffName">BGM：OFF</span><span class="diffDesc">音を出さずにプレイ</span>`;
   }
 
+  function addAudioUnlockButton() {
+    if (document.getElementById("audioUnlockBtn")) return;
+    const btn = document.createElement("button");
+    btn.id = "audioUnlockBtn";
+    btn.type = "button";
+    btn.addEventListener("click", unlockAudio);
+    btn.addEventListener("touchend", e => {
+      e.preventDefault();
+      unlockAudio();
+    }, { passive: false });
+    document.body.appendChild(btn);
+    updateAudioButton();
+  }
+
   function addBgmSettingButton() {
     const grid = document.querySelector("#settingsScreen .difficultyGrid");
     if (!grid || document.getElementById("bgmToggleBtn")) return;
@@ -47,12 +134,7 @@
     btn.id = "bgmToggleBtn";
     btn.className = "difficultyBtn";
     btn.type = "button";
-    btn.addEventListener("click", () => {
-      bgmEnabled = !bgmEnabled;
-      saveSetting();
-      updateToggleButton();
-      if (!bgmEnabled) stopBattleBgm();
-    });
+    btn.addEventListener("click", toggleBgm);
     grid.appendChild(btn);
     updateToggleButton();
   }
@@ -64,10 +146,10 @@
     const howtoBackBtn = document.getElementById("howtoBackBtn");
     const settingsBackBtn = document.getElementById("settingsBackBtn");
 
+    startBtn?.addEventListener("pointerdown", unlockAudio);
     startBtn?.addEventListener("click", playBattleBgm);
-    startBtn?.addEventListener("touchstart", playBattleBgm, { passive: true });
+    retryBtn?.addEventListener("pointerdown", unlockAudio);
     retryBtn?.addEventListener("click", playBattleBgm);
-    retryBtn?.addEventListener("touchstart", playBattleBgm, { passive: true });
 
     resultTitleBtn?.addEventListener("click", stopBattleBgm);
     howtoBackBtn?.addEventListener("click", stopBattleBgm);
@@ -83,6 +165,7 @@
   }
 
   window.addEventListener("DOMContentLoaded", () => {
+    addAudioUnlockButton();
     addBgmSettingButton();
     bindBgmEvents();
   });

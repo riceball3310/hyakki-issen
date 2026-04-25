@@ -48,8 +48,8 @@ canvas {
 
 #audioUnlockBtn {
   position: fixed;
-  right: 14px;
-  top: 14px;
+  right: max(12px, env(safe-area-inset-right));
+  top: max(12px, env(safe-area-inset-top));
   z-index: 30;
   min-width: 84px;
   height: 34px;
@@ -170,7 +170,7 @@ canvas {
 .titleFooterHint {
   position: absolute;
   left: 50%;
-  bottom: 12px;
+  bottom: max(12px, env(safe-area-inset-bottom));
   transform: translateX(-50%);
   padding: 7px 12px;
   border-radius: 999px;
@@ -191,6 +191,8 @@ canvas {
     radial-gradient(circle at center, rgba(80, 32, 130, 0.25), rgba(0, 0, 0, 0.72)),
     rgba(5, 5, 10, 0.72);
   backdrop-filter: blur(10px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .modalCard {
@@ -453,72 +455,65 @@ canvas {
   }
 }
 
-@media (max-width: 680px) {
-  .titleArtPc {
-    display: none;
-  }
-
-  .titleArtSp {
-    display: block;
-  }
-
-  .titleHero {
-    bottom: 20px;
-    width: min(92vw, 480px);
-  }
-
-  .titleHero h1 {
-    font-size: clamp(42px, 15vw, 68px);
-    letter-spacing: 0.10em;
-  }
-
-  .titleSub {
-    font-size: 14px;
-  }
-
-  .titleButtons {
-    gap: 10px;
-  }
-
-  .primaryBtn {
-    min-height: 56px;
-    font-size: 16px;
-  }
-
-  .secondaryBtn {
-    min-height: 48px;
+/* ---------- Smartphone portrait UI ---------- */
+@media (max-width: 680px) and (orientation: portrait) {
+  #audioUnlockBtn {
+    top: calc(env(safe-area-inset-top) + 92px);
+    right: 28px;
+    height: 48px;
+    min-width: 136px;
     font-size: 15px;
+    border-radius: 24px;
   }
 
   #ui {
-    top: 52px;
+    top: calc(env(safe-area-inset-top) + 52px);
     left: 12px;
   }
 
   #stats {
     font-size: 12px;
   }
-}
 
-@media (max-width: 680px) {
+  .titleStage {
+    display: block;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-top: calc(env(safe-area-inset-top) + 78px);
+    padding-bottom: calc(env(safe-area-inset-bottom) + 130px);
+  }
+
   .titleFrame {
-    width: min(100vw, 177.7vh);
+    width: 156vw;
+    max-width: none;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    aspect-ratio: 1672 / 941;
   }
 
   .titleArtPc {
-    display: none;
-  }
-
-  .titleArtSp {
     display: block;
   }
 
-  .titleFooterHint {
-    bottom: 10px;
-    font-size: 11px;
+  .titleArtSp {
+    display: none;
   }
 
-  /* スマホ向けに少しだけ当たり判定を広げる */
+  .titleFooterHint {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    transform: none;
+    display: block;
+    width: fit-content;
+    max-width: 72vw;
+    margin: 28px auto 0;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.55;
+    font-size: 13px;
+  }
+
   .startSpot {
     left: 4.4%;
     top: 43.8%;
@@ -538,5 +533,154 @@ canvas {
     top: 64.9%;
     width: 29.0%;
     height: 9.2%;
+  }
+
+  .modalScreen {
+    display: block;
+    padding: calc(env(safe-area-inset-top) + 84px) 14px calc(env(safe-area-inset-bottom) + 128px);
+    overflow-y: auto;
+    min-height: 100dvh;
+    box-sizing: border-box;
+  }
+
+  .modalCard {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 24px 18px 22px;
+    border-radius: 22px;
+  }
+
+  .modalCard h2 {
+    font-size: 40px;
+    line-height: 1.08;
+  }
+
+  .modalLead,
+  .modalNote {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .infoGrid,
+  .difficultyGrid,
+  .resultGrid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .infoBlock,
+  .resultItem,
+  .difficultyBtn {
+    padding: 13px 14px;
+    border-radius: 16px;
+  }
+
+  .infoText {
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  .diffName {
+    font-size: 17px;
+  }
+
+  .diffDesc {
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .modalActions {
+    margin-top: 18px;
+    gap: 10px;
+  }
+
+  .primaryBtn,
+  .secondaryBtn,
+  .smallBtn {
+    width: min(100%, 300px);
+    min-width: 0;
+    min-height: 46px;
+    height: 46px;
+    font-size: 15px;
+    padding: 0 18px;
+  }
+
+  #stickBase {
+    left: 18px;
+    bottom: calc(env(safe-area-inset-bottom) + 24px);
+    width: 104px;
+    height: 104px;
+  }
+
+  #stick {
+    left: 34px;
+    top: 34px;
+    width: 36px;
+    height: 36px;
+  }
+
+  #attackBtn {
+    right: 18px;
+    bottom: calc(env(safe-area-inset-bottom) + 26px);
+    width: 92px;
+    height: 92px;
+    font-size: 16px;
+  }
+
+  #ultimateBtn {
+    right: 112px;
+    bottom: calc(env(safe-area-inset-bottom) + 42px);
+    width: 68px;
+    height: 68px;
+    font-size: 13px;
+  }
+}
+
+/* ---------- Smartphone landscape UI ---------- */
+@media (max-height: 520px) and (orientation: landscape) {
+  #audioUnlockBtn {
+    top: calc(env(safe-area-inset-top) + 10px);
+    right: calc(env(safe-area-inset-right) + 10px);
+    height: 32px;
+    min-width: 92px;
+    font-size: 12px;
+  }
+
+  .modalScreen {
+    display: block;
+    padding: calc(env(safe-area-inset-top) + 14px) 18px calc(env(safe-area-inset-bottom) + 24px);
+    overflow-y: auto;
+    box-sizing: border-box;
+  }
+
+  .modalCard {
+    width: min(92vw, 760px);
+    margin: 0 auto;
+    padding: 18px 22px;
+    border-radius: 22px;
+  }
+
+  .modalCard h2 {
+    font-size: 36px;
+  }
+
+  .infoGrid,
+  .resultGrid {
+    gap: 10px;
+  }
+
+  .infoBlock,
+  .resultItem,
+  .difficultyBtn {
+    padding: 12px 14px;
+  }
+
+  .primaryBtn,
+  .secondaryBtn,
+  .smallBtn {
+    min-height: 42px;
+    height: 42px;
+    font-size: 14px;
   }
 }

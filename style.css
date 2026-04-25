@@ -46,6 +46,34 @@ canvas {
   opacity: 0.9;
 }
 
+#audioUnlockBtn {
+  position: fixed;
+  right: 14px;
+  top: 14px;
+  z-index: 30;
+  min-width: 84px;
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(10,10,18,0.56);
+  color: rgba(255,255,255,0.92);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.24);
+}
+
+#audioUnlockBtn.is-on {
+  background: rgba(120, 42, 190, 0.72);
+  box-shadow: 0 0 18px rgba(190, 90, 255, 0.34);
+}
+
+#audioUnlockBtn.is-off {
+  opacity: 0.72;
+}
+
 .menuScreen {
   position: fixed;
   inset: 0;
@@ -154,7 +182,6 @@ canvas {
   pointer-events: none;
 }
 
-/* ---------- Modal screens ---------- */
 /* ---------- Modal screens ---------- */
 .modalScreen {
   display: grid;
@@ -464,7 +491,7 @@ canvas {
   }
 
   #ui {
-    top: 12px;
+    top: 52px;
     left: 12px;
   }
 
@@ -472,7 +499,6 @@ canvas {
     font-size: 12px;
   }
 }
-
 
 @media (max-width: 680px) {
   .titleFrame {

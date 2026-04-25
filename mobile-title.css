@@ -105,6 +105,17 @@
     padding: calc(env(safe-area-inset-top) + 72px) 12px calc(env(safe-area-inset-bottom) + 150px) !important;
   }
 
+  /* IMPORTANT: keep hidden modal screens truly hidden on mobile.
+     Without this, .modalScreen { display:block !important; } overrides .hidden
+     and the result screen can appear on top of the title screen. */
+  .menuScreen.hidden,
+  .modalScreen.hidden,
+  #howtoScreen.hidden,
+  #settingsScreen.hidden,
+  #resultScreen.hidden {
+    display: none !important;
+  }
+
   .modalCard {
     width: 100% !important;
     box-sizing: border-box !important;
@@ -147,4 +158,10 @@
     padding: 0 16px !important;
     font-size: 15px !important;
   }
+}
+
+/* Safety rule outside media query too. */
+.menuScreen.hidden,
+.modalScreen.hidden {
+  display: none !important;
 }

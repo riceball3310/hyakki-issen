@@ -1,7 +1,7 @@
 (() => {
   const BGM_CANDIDATES = [
-    "assets/bgm_battle.mp3.mp3?v=4",
-    "assets/bgm_battle.mp3?v=4"
+    "assets/bgm_battle.mp3.mp3?v=5",
+    "assets/bgm_battle.mp3?v=5"
   ];
   const STORAGE_KEY = "hyakki_issen_bgm_enabled";
 
@@ -11,7 +11,7 @@
   audio.preload = "auto";
 
   let bgmEnabled = localStorage.getItem(STORAGE_KEY) !== "off";
-  let unlocked = false;
+  let bgmReady = bgmEnabled;
   let currentCandidateIndex = 0;
 
   function saveSetting() {
@@ -44,10 +44,8 @@
     const btn = document.getElementById("audioUnlockBtn");
     if (!btn) return;
 
-    btn.textContent = bgmEnabled
-      ? (unlocked ? "BGM ON" : "音声ON")
-      : "BGM OFF";
-    btn.classList.toggle("is-on", bgmEnabled && unlocked);
+    btn.textContent = bgmEnabled ? "BGM待機" : "BGM OFF";
+    btn.classList.toggle("is-on", bgmEnabled && bgmReady);
     btn.classList.toggle("is-off", !bgmEnabled);
   }
 
@@ -59,7 +57,7 @@
     if (promise && typeof promise.then === "function") {
       promise
         .then(() => {
-          unlocked = true;
+          bgmReady = true;
           updateAudioButton();
         })
         .catch(() => {
@@ -68,7 +66,7 @@
             if (retry && typeof retry.then === "function") {
               retry
                 .then(() => {
-                  unlocked = true;
+                  bgmReady = true;
                   updateAudioButton();
                 })
                 .catch(() => updateAudioButton());
@@ -88,17 +86,19 @@
 
   function toggleBgm() {
     bgmEnabled = !bgmEnabled;
+    bgmReady = bgmEnabled;
     saveSetting();
-    if (bgmEnabled) playBattleBgm();
-    else stopBattleBgm();
+    if (!bgmEnabled) stopBattleBgm();
     updateToggleButton();
     updateAudioButton();
   }
 
-  function unlockAudio() {
+  // スマホ向けの音声許可ボタン。
+  // ここでは再生しない。戦闘BGMはゲームスタート時だけ鳴らす。
+  function prepareAudio() {
     bgmEnabled = true;
+    bgmReady = true;
     saveSetting();
-    playBattleBgm();
     updateToggleButton();
     updateAudioButton();
   }
@@ -108,7 +108,7 @@
     if (!btn) return;
     btn.classList.toggle("active", bgmEnabled);
     btn.innerHTML = bgmEnabled
-      ? `<span class="diffName">BGM：ON</span><span class="diffDesc">戦闘中に紫月百鬼夜行を再生</span>`
+      ? `<span class="diffName">BGM：ON</span><span class="diffDesc">ゲームスタート後に紫月百鬼夜行を再生</span>`
       : `<span class="diffName">BGM：OFF</span><span class="diffDesc">音を出さずにプレイ</span>`;
   }
 
@@ -117,10 +117,10 @@
     const btn = document.createElement("button");
     btn.id = "audioUnlockBtn";
     btn.type = "button";
-    btn.addEventListener("click", unlockAudio);
+    btn.addEventListener("click", prepareAudio);
     btn.addEventListener("touchend", e => {
       e.preventDefault();
-      unlockAudio();
+      prepareAudio();
     }, { passive: false });
     document.body.appendChild(btn);
     updateAudioButton();
@@ -146,9 +146,9 @@
     const howtoBackBtn = document.getElementById("howtoBackBtn");
     const settingsBackBtn = document.getElementById("settingsBackBtn");
 
-    startBtn?.addEventListener("pointerdown", unlockAudio);
+    startBtn?.addEventListener("pointerdown", playBattleBgm);
     startBtn?.addEventListener("click", playBattleBgm);
-    retryBtn?.addEventListener("pointerdown", unlockAudio);
+    retryBtn?.addEventListener("pointerdown", playBattleBgm);
     retryBtn?.addEventListener("click", playBattleBgm);
 
     resultTitleBtn?.addEventListener("click", stopBattleBgm);

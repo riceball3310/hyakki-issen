@@ -1,5 +1,5 @@
 (() => {
-  const BGM_SRC = "assets/bgm_battle.mp3";
+  const BGM_SRC = "assets/bgm_battle.mp3.mp3";
   const STORAGE_KEY = "hyakki_issen_bgm_enabled";
 
   const audio = new Audio(BGM_SRC);

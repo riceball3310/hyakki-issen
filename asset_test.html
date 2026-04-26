@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>百鬼一閃 素材チェック</title>
+  <style>
+    :root {
+      color-scheme: dark;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(142, 76, 255, 0.22), rgba(0, 0, 0, 0) 34%),
+        linear-gradient(180deg, #121020, #06060b);
+      color: #fff;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      padding: max(18px, env(safe-area-inset-top)) 14px max(28px, env(safe-area-inset-bottom));
+    }
+
+    main {
+      width: min(100%, 860px);
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(28px, 8vw, 48px);
+      letter-spacing: 0.06em;
+    }
+
+    .lead {
+      margin: 10px 0 22px;
+      color: rgba(255, 255, 255, 0.76);
+      line-height: 1.75;
+      font-size: 14px;
+    }
+
+    .nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    a,
+    button {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .linkBtn,
+    .testBtn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.08);
+      color: white;
+      text-decoration: none;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      font-size: 14px;
+    }
+
+    .testBtn {
+      width: 100%;
+      margin-top: 10px;
+      background: linear-gradient(180deg, rgba(170, 84, 255, 0.92), rgba(98, 38, 164, 0.94));
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      background: rgba(255, 255, 255, 0.055);
+      padding: 16px;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.20);
+    }
+
+    .card h2 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      letter-spacing: 0.04em;
+    }
+
+    .path {
+      display: block;
+      margin: 8px 0 10px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.28);
+      color: rgba(236, 222, 255, 0.9);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      word-break: break-all;
+    }
+
+    .status {
+      min-height: 24px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .ok {
+      color: #9ff0b5;
+      font-weight: 800;
+    }
+
+    .ng {
+      color: #ff9c9c;
+      font-weight: 800;
+    }
+
+    .preview {
+      width: 100%;
+      max-height: 240px;
+      object-fit: contain;
+      border-radius: 14px;
+      background: rgba(0, 0, 0, 0.28);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    audio {
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    ul {
+      margin: 10px 0 0;
+      padding-left: 1.2em;
+      color: rgba(255, 255, 255, 0.78);
+      line-height: 1.75;
+      font-size: 14px;
+    }
+
+    @media (max-width: 720px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>素材チェック</h1>
+    <p class="lead">
+      GitHubにアップした画像・BGM・SEが正しいファイル名で読み込めるか確認するページです。<br>
+      スマホで音が鳴らない時は、まずこのページで素材単体が再生できるか確認してください。
+    </p>
+
+    <div class="nav">
+      <a class="linkBtn" href="./">ゲームに戻る</a>
+      <button class="linkBtn" id="checkAllBtn" type="button">全部チェック</button>
+    </div>
+
+    <section class="grid" id="grid"></section>
+
+    <section class="card full" style="margin-top: 14px;">
+      <h2>推奨ファイル名</h2>
+      <ul>
+        <li>BGM：<code>assets/bgm_battle.mp3</code></li>
+        <li>斬撃SE：<code>assets/se_slash.mp3</code></li>
+        <li>ヒットSE：<code>assets/se_hit.mp3</code></li>
+        <li>撃破SE：<code>assets/se_defeat.mp3</code></li>
+        <li>必殺技SE：<code>assets/se_ultimate.mp3</code></li>
+        <li>決定音SE：<code>assets/se_button.mp3</code></li>
+        <li>PCタイトル：<code>assets/title_bg_pc.png</code></li>
+        <li>スマホタイトル：<code>assets/title_bg_sp.png</code></li>
+      </ul>
+    </section>
+  </main>
+
+  <script>
+    const assets = [
+      { type: 'image', name: 'PCタイトル画像', path: 'assets/title_bg_pc.png' },
+      { type: 'image', name: 'スマホタイトル画像', path: 'assets/title_bg_sp.png' },
+      { type: 'audio', name: '戦闘BGM 推奨名', path: 'assets/bgm_battle.mp3' },
+      { type: 'audio', name: '戦闘BGM 旧名候補', path: 'assets/bgm_battle.mp3.mp3' },
+      { type: 'audio', name: '斬撃SE', path: 'assets/se_slash.mp3' },
+      { type: 'audio', name: 'ヒットSE', path: 'assets/se_hit.mp3' },
+      { type: 'audio', name: '撃破SE', path: 'assets/se_defeat.mp3' },
+      { type: 'audio', name: '必殺技SE', path: 'assets/se_ultimate.mp3' },
+      { type: 'audio', name: '決定音SE', path: 'assets/se_button.mp3' }
+    ];
+
+    const grid = document.getElementById('grid');
+
+    function cacheBust(path) {
+      return `${path}?v=${Date.now()}`;
+    }
+
+    function makeCard(asset) {
+      const card = document.createElement('article');
+      card.className = 'card';
+      card.innerHTML = `
+        <h2>${asset.name}</h2>
+        <code class="path">${asset.path}</code>
+        <div class="status">未チェック</div>
+      `;
+
+      const status = card.querySelector('.status');
+
+      if (asset.type === 'image') {
+        const img = document.createElement('img');
+        img.className = 'preview';
+        img.alt = asset.name;
+        img.loading = 'lazy';
+        img.addEventListener('load', () => {
+          status.innerHTML = `<span class="ok">OK</span>：読み込み成功 / ${img.naturalWidth}×${img.naturalHeight}`;
+        });
+        img.addEventListener('error', () => {
+          status.innerHTML = `<span class="ng">NG</span>：読み込み失敗。ファイル名か配置を確認。`;
+        });
+        img.src = cacheBust(asset.path);
+        card.appendChild(img);
+      }
+
+      if (asset.type === 'audio') {
+        const audio = document.createElement('audio');
+        audio.controls = true;
+        audio.preload = 'metadata';
+        audio.src = cacheBust(asset.path);
+
+        audio.addEventListener('loadedmetadata', () => {
+          const sec = Number.isFinite(audio.duration) ? Math.round(audio.duration) : '?';
+          status.innerHTML = `<span class="ok">OK</span>：読み込み成功 / 約${sec}秒`;
+        });
+        audio.addEventListener('error', () => {
+          status.innerHTML = `<span class="ng">NG</span>：読み込み失敗。ファイル名・配置・形式を確認。`;
+        });
+
+        const btn = document.createElement('button');
+        btn.className = 'testBtn';
+        btn.type = 'button';
+        btn.textContent = '再生テスト';
+        btn.addEventListener('click', async () => {
+          try {
+            audio.currentTime = 0;
+            audio.volume = 0.65;
+            await audio.play();
+            status.innerHTML = `<span class="ok">再生中</span>：この素材は鳴っています。`;
+          } catch (e) {
+            status.innerHTML = `<span class="ng">再生失敗</span>：${e.name || 'Error'} / ${e.message || 'no message'}`;
+          }
+        });
+
+        card.appendChild(audio);
+        card.appendChild(btn);
+      }
+
+      return card;
+    }
+
+    for (const asset of assets) {
+      grid.appendChild(makeCard(asset));
+    }
+
+    document.getElementById('checkAllBtn').addEventListener('click', () => {
+      location.reload();
+    });
+  </script>
+</body>
+</html>

@@ -25,7 +25,7 @@
     }
 
     main {
-      width: min(100%, 860px);
+      width: min(100%, 900px);
       margin: 0 auto;
     }
 
@@ -75,6 +75,16 @@
       width: 100%;
       margin-top: 10px;
       background: linear-gradient(180deg, rgba(170, 84, 255, 0.92), rgba(98, 38, 164, 0.94));
+    }
+
+    .sectionTitle {
+      grid-column: 1 / -1;
+      margin: 10px 0 0;
+      padding: 10px 2px 2px;
+      color: rgba(229, 206, 255, 0.92);
+      font-size: 15px;
+      font-weight: 1000;
+      letter-spacing: 0.14em;
     }
 
     .grid {
@@ -135,6 +145,15 @@
       border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
+    .preview.sprite {
+      max-height: 180px;
+      image-rendering: pixelated;
+    }
+
+    .preview.wide {
+      max-height: 170px;
+    }
+
     audio {
       width: 100%;
       margin-top: 10px;
@@ -164,7 +183,7 @@
     <h1>素材チェック</h1>
     <p class="lead">
       GitHubにアップした画像・BGM・SEが正しいファイル名で読み込めるか確認するページです。<br>
-      スマホで音が鳴らない時は、まずこのページで素材単体が再生できるか確認してください。
+      キャラが〇表示になる時、カットインが崩れる時、音が鳴らない時はここで素材単体を確認してください。
     </p>
 
     <div class="nav">
@@ -177,6 +196,13 @@
     <section class="card full" style="margin-top: 14px;">
       <h2>推奨ファイル名</h2>
       <ul>
+        <li>ユユ歩行：<code>assets/yuyu_walk4.png</code></li>
+        <li>ユユ攻撃：<code>assets/yuyu_attack3.png</code></li>
+        <li>小鬼：<code>assets/oni_walk4.png</code></li>
+        <li>鬼火：<code>assets/onibi_walk4.png</code></li>
+        <li>大鬼：<code>assets/daioni_walk4.png</code></li>
+        <li>カットイン：<code>assets/yuyu_cutin.png</code></li>
+        <li>月斬エフェクト：<code>assets/moon_slash.png</code></li>
         <li>BGM：<code>assets/bgm_battle.mp3</code></li>
         <li>斬撃SE：<code>assets/se_slash.mp3</code></li>
         <li>ヒットSE：<code>assets/se_hit.mp3</code></li>
@@ -191,8 +217,20 @@
 
   <script>
     const assets = [
-      { type: 'image', name: 'PCタイトル画像', path: 'assets/title_bg_pc.png' },
+      { heading: 'タイトル画像' },
+      { type: 'image', name: 'PCタイトル画像', path: 'assets/title_bg_pc.png', className: 'wide' },
       { type: 'image', name: 'スマホタイトル画像', path: 'assets/title_bg_sp.png' },
+
+      { heading: 'キャラクター / 敵 / エフェクト画像' },
+      { type: 'image', name: 'ユユ歩行スプライト', path: 'assets/yuyu_walk4.png', className: 'sprite' },
+      { type: 'image', name: 'ユユ攻撃スプライト', path: 'assets/yuyu_attack3.png', className: 'sprite' },
+      { type: 'image', name: '小鬼スプライト', path: 'assets/oni_walk4.png', className: 'sprite' },
+      { type: 'image', name: '鬼火スプライト', path: 'assets/onibi_walk4.png', className: 'sprite' },
+      { type: 'image', name: '大鬼スプライト', path: 'assets/daioni_walk4.png', className: 'sprite' },
+      { type: 'image', name: 'ユユ必殺カットイン', path: 'assets/yuyu_cutin.png', className: 'wide' },
+      { type: 'image', name: '月斬エフェクト', path: 'assets/moon_slash.png', className: 'wide' },
+
+      { heading: '音声素材' },
       { type: 'audio', name: '戦闘BGM 推奨名', path: 'assets/bgm_battle.mp3' },
       { type: 'audio', name: '戦闘BGM 旧名候補', path: 'assets/bgm_battle.mp3.mp3' },
       { type: 'audio', name: '斬撃SE', path: 'assets/se_slash.mp3' },
@@ -208,6 +246,13 @@
       return `${path}?v=${Date.now()}`;
     }
 
+    function makeHeading(text) {
+      const h = document.createElement('div');
+      h.className = 'sectionTitle';
+      h.textContent = text;
+      return h;
+    }
+
     function makeCard(asset) {
       const card = document.createElement('article');
       card.className = 'card';
@@ -221,7 +266,7 @@
 
       if (asset.type === 'image') {
         const img = document.createElement('img');
-        img.className = 'preview';
+        img.className = `preview ${asset.className || ''}`.trim();
         img.alt = asset.name;
         img.loading = 'lazy';
         img.addEventListener('load', () => {
@@ -271,7 +316,8 @@
     }
 
     for (const asset of assets) {
-      grid.appendChild(makeCard(asset));
+      if (asset.heading) grid.appendChild(makeHeading(asset.heading));
+      else grid.appendChild(makeCard(asset));
     }
 
     document.getElementById('checkAllBtn').addEventListener('click', () => {
